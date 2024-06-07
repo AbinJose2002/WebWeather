@@ -6,7 +6,7 @@ const Navbar = () => {
         <nav className="nav d-flex justify-content-center align-items-center">
         <ul className="nav">
         <li className="nav-item">
-            <a className="nav-link text-dark " href="#"><h1>WebWeather</h1></a>
+        <a className="nav-link text-dark " href="#"><h1>WebWeather</h1></a>
         </li>
         </ul>
         </nav>
