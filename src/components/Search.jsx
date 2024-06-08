@@ -3,6 +3,7 @@ import { useState } from 'react';
 import React from 'react';
 import './Search.css'
 import { v4 as uuidv4 } from 'uuid';
+import Weather_card from './Weather_card';
 
 export default function Search() {
   const [city, setCity] = useState('');
@@ -30,8 +31,8 @@ export default function Search() {
   }
 
   const generateCard = async (key) => {
-    // console.log(key)
-    
+    console.log(key)
+
   }
 
   return (
@@ -47,10 +48,11 @@ export default function Search() {
       <div className="dropdown ">
         <ul className="drop-list d-flex flex-column">
           {cityResponse.map((item) => (
-            <button className='list-btn my-1 px-5 py-1' onClick={()=>cardHandle(item.key)}><li  key={item.id}>{item.name}</li></button>
+            <button className='list-btn my-1 px-5 py-1' onClick={()=>cardHandle(item.key)} key={item.id}><li  >{item.name}</li></button>
           ))}
         </ul>
       </div>
+      <Weather_card/>
     </div>
   );
 }
