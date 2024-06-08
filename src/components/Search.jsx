@@ -8,6 +8,11 @@ import Weather_card from './Weather_card';
 export default function Search() {
   const [city, setCity] = useState('');
   const [cityResponse, setCityResponse] = useState([]);
+  const [cardData, setCardData] = useState({});
+  const [showCard, setshowCard] = useState('false')
+  let category;
+  let minTemp
+  let maxTemp
 
   const handleCityField = async (e) => {
     setCity(e.target.value);
@@ -25,14 +30,21 @@ export default function Search() {
     }
   };
 
-  const cardHandle = (key) => {
+  const cardHandle = (key,name) => {
     setCityResponse([])
-    generateCard(key)
+    generateCard(key,name)
   }
 
-  const generateCard = async (key) => {
-    console.log(key)
-
+  const generateCard = async (key,name) => {
+    let forecastResponse = await fetch(`http://dataservice.accuweather.com/forecasts/v1/daily/1day/${key}?apikey=idAxTz2qsqXEai3wHtURlxxgoj9iGDzM`)
+    if(forecastResponse.ok){
+        const forecaseData = await forecastResponse.json()
+        category = forecaseData.Headline.Category; // "thunderstorm"
+        minTemp = forecaseData.DailyForecasts[0].Temperature.Minimum.Value; // 75 (assuming index 0 is today)
+        maxTemp = forecaseData.DailyForecasts[0].Temperature.Maximum.Value; // 85 (assuming index 0 is today)
+        setCardData({ category, minTemp, maxTemp,name })
+        setshowCard('true')
+    }
   }
 
   return (
@@ -48,11 +60,11 @@ export default function Search() {
       <div className="dropdown ">
         <ul className="drop-list d-flex flex-column">
           {cityResponse.map((item) => (
-            <button className='list-btn my-1 px-5 py-1' onClick={()=>cardHandle(item.key)} key={item.id}><li  >{item.name}</li></button>
+            <button className='list-btn my-1 px-5 py-1' onClick={()=>cardHandle(item.key,item.name)} key={item.id}><li  >{item.name}</li></button>
           ))}
         </ul>
       </div>
-      <Weather_card/>
+      { showCard ? <Weather_card category={cardData.category} minTemp={cardData.minTemp} maxTemp={cardData.maxTemp} name={cardData.name}/> : ''}
     </div>
   );
 }
